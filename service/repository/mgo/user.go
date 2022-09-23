@@ -1,4 +1,4 @@
-package mongo
+package mgo
 
 import (
 	"bot/pkg/constant"
@@ -11,9 +11,10 @@ import (
 
 type IUserRepository interface {
 	AddUser(ctx context.Context, user models.User) (string, error)
-	UpdateUser()
+	UpdateUser(ctx context.Context, user models.User) error
 	DeleteUser()
 	GetUser(ctx context.Context, req models.User) (*models.User, error)
+	GetAllUser(ctx context.Context) ([]models.User, error)
 }
 
 type UserRepository struct {
@@ -35,8 +36,16 @@ func (u *UserRepository) AddUser(ctx context.Context, user models.User) (string,
 	}
 	return result.InsertedID.(primitive.ObjectID).Hex(), nil
 }
-func (u *UserRepository) UpdateUser() {
-
+func (u *UserRepository) UpdateUser(ctx context.Context, user models.User) error {
+	id, _ := primitive.ObjectIDFromHex(user.ID)
+	model := u.buildUpdateModel(user)
+	_, err := u.getCollection().UpdateOne(ctx, bson.M{
+		"_id": id,
+	}, bson.M{"$set": model})
+	if err != nil {
+		return err
+	}
+	return nil
 }
 func (u *UserRepository) DeleteUser() {
 
@@ -56,4 +65,13 @@ func (u *UserRepository) GetUser(ctx context.Context, req models.User) (*models.
 		return nil, err
 	}
 	return &user, nil
+}
+func (u *UserRepository) GetAllUser(ctx context.Context) ([]models.User, error) {
+	return nil, nil
+}
+func (u *UserRepository) buildUpdateModel(user models.User) bson.M {
+	model := bson.M{}
+	model["username"] = user.Username
+	model["password"] = user.Password
+	return model
 }
