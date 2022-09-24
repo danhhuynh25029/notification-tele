@@ -27,7 +27,7 @@ func NewUserRepository(mgo *mongo.Client) IUserRepository {
 	}
 }
 func (u *UserRepository) getCollection() *mongo.Collection {
-	return u.mgo.Database(constant.DatabaseUser).Collection(constant.CollectionUser)
+	return u.mgo.Database(constant.DatabaseTele).Collection(constant.CollectionUser)
 }
 func (u *UserRepository) AddUser(ctx context.Context, user models.User) (string, error) {
 	result, err := u.getCollection().InsertOne(ctx, &user)

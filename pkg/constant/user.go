@@ -1,7 +1,7 @@
 package constant
 
 const (
-	DatabaseUser      = "telegram-bot"
+	DatabaseTele      = "telegram-bot"
 	CollectionUser    = "user"
 	CollectionMessage = "message"
 )

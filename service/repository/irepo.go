@@ -19,3 +19,6 @@ func NewIRepo(client *mongo.Client) IRepo {
 func (i *IRepo) NewUserRepo() mgo.IUserRepository {
 	return mgo.NewUserRepository(i.client)
 }
+func (i *IRepo) NewMessageRepo() mgo.IMessageRepo {
+	return mgo.NewMessageRepo(i.client)
+}

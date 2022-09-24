@@ -61,11 +61,20 @@ func (u *UserHandler) UpdateUser(c *gin.Context) {
 	})
 }
 func (u *UserHandler) GetUser(c *gin.Context) {
-	users, err := u.userUseCase.GetUser()
+	var req models.User
+	err := c.ShouldBindJSON(&req)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"message": "cannot get user",
 		})
+		return
+	}
+	users, err := u.userUseCase.GetUser(c, req)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"message": "cannot get user",
+		})
+		return
 	}
 	c.JSON(http.StatusOK, users)
 }

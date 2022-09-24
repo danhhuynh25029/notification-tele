@@ -9,7 +9,7 @@ import (
 type IUserUsecase interface {
 	AddUser(ctx context.Context, user models.User) error
 	UpdateUser(ctx context.Context, user models.User) error
-	GetUser(ctx context.Context) ([]models.User, error)
+	GetUser(ctx context.Context, req models.User) (*models.User, error)
 }
 
 type UserUsecase struct {
@@ -35,7 +35,10 @@ func (u *UserUsecase) UpdateUser(ctx context.Context, user models.User) error {
 	}
 	return nil
 }
-func (u *UserUsecase) GetUser(ctx context.Context) ([]models.User, error) {
-	users, err := u.repo.NewUserRepo().GetUser(ctx)
-	return nil, nil
+func (u *UserUsecase) GetUser(ctx context.Context, req models.User) (*models.User, error) {
+	user, err := u.repo.NewUserRepo().GetUser(ctx, req)
+	if err != nil {
+		return nil, err
+	}
+	return user, nil
 }
