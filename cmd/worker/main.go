@@ -3,6 +3,9 @@ package main
 import (
 	"bot/service/domain/user/delivery/http"
 	"bot/service/domain/user/usecase"
+
+	messageHandler "bot/service/domain/message/delivery/http"
+	messageUse "bot/service/domain/message/usecase"
 	"bot/service/repository"
 	"context"
 	"fmt"
@@ -21,8 +24,13 @@ func main() {
 	repo := repository.NewIRepo(mgoClient)
 	userUsecase := usecase.NewUserUseCase(repo)
 	userHandler := http.NewUserHandler(userUsecase)
+
+	messageUsecase := messageUse.NewMessageUsecase(repo)
+	messageHandler := messageHandler.NewMessageHandler(messageUsecase)
+
 	r := gin.Default()
 	group := r.Group("/v1")
 	userHandler.NewUserRoute(group)
+	messageHandler.NewMessageRoute(group)
 	r.Run(":3070")
 }

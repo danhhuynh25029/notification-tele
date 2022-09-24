@@ -43,7 +43,9 @@ func (m *MessageRepo) UpdateMessage(ctx context.Context, message models.Message)
 	model := m.buildUpdateModel(message)
 	id, _ := primitive.ObjectIDFromHex(message.ID)
 
-	_, err := m.getCollection().UpdateOne(ctx, id, model)
+	_, err := m.getCollection().UpdateOne(ctx, bson.M{
+		"_id": id,
+	}, bson.M{"$set": model})
 	if err != nil {
 		return err
 	}
@@ -63,7 +65,8 @@ func (m *MessageRepo) DeleteMessage(ctx context.Context, message models.Message)
 
 func (m *MessageRepo) GetAllMessage(ctx context.Context) ([]models.Message, error) {
 	var messages []models.Message
-	cursor, err := m.getCollection().Find(ctx, nil)
+	cursor, err := m.getCollection().Find(ctx, bson.D{})
+	defer cursor.Close(ctx)
 	if err != nil {
 		return nil, err
 	}

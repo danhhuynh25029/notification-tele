@@ -2,7 +2,7 @@ package usecase
 
 import (
 	"bot/service/models"
-	"bot/service/repository/mgo"
+	"bot/service/repository"
 	"context"
 )
 
@@ -14,27 +14,43 @@ type IMessageUsecase interface {
 }
 
 type MessageUsecase struct {
-	repo mgo.IMessageRepo
+	repo repository.IRepo
 }
 
-func NewMessageUsecase(repo mgo.IMessageRepo) IMessageUsecase {
+func NewMessageUsecase(repo repository.IRepo) IMessageUsecase {
 	return &MessageUsecase{
 		repo: repo,
 	}
 }
 
 func (m *MessageUsecase) AddMessage(ctx context.Context, message models.Message) error {
+	err := m.repo.NewMessageRepo().AddMessage(ctx, message)
+	if err != nil {
+		return err
+	}
 	return nil
 }
 
 func (m *MessageUsecase) UpdateMesasge(ctx context.Context, message models.Message) error {
+	err := m.repo.NewMessageRepo().UpdateMessage(ctx, message)
+	if err != nil {
+		return err
+	}
 	return nil
 }
 
 func (m *MessageUsecase) DeleteMessage(ctx context.Context, message models.Message) error {
+	err := m.repo.NewMessageRepo().DeleteMessage(ctx, message)
+	if err != nil {
+		return err
+	}
 	return nil
 }
 
 func (m *MessageUsecase) GetAllMessage(ctx context.Context) ([]models.Message, error) {
-	return nil, nil
+	messages, err := m.repo.NewMessageRepo().GetAllMessage(ctx)
+	if err != nil {
+		return nil, err
+	}
+	return messages, nil
 }
