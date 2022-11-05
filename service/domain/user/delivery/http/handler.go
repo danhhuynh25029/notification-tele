@@ -3,8 +3,9 @@ package http
 import (
 	"bot/service/domain/user/usecase"
 	"bot/service/models"
-	"github.com/gin-gonic/gin"
 	"net/http"
+
+	"github.com/gin-gonic/gin"
 )
 
 type UserHandler struct {

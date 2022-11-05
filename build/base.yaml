@@ -1,0 +1,4 @@
+rabbit: 
+  url : amqps://ajlnunwz:GgYnMzaVIBWC6v8O6kgiBoNIlxhYSyRM@codfish.rmq.cloudamqp.com/ajlnunwz
+mgo:
+  url : mongodb://127.0.0.1:27017
